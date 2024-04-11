@@ -1,82 +1,108 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
-import { doc, setDoc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  setDoc,
+} from "firebase/firestore";
 import { database } from "./firebaseApp";
 
-const COLLECTION_NAME = "title"; // コレクション名
-const UNIQUE_DATA_ID = "unique"; // ドキュメントID
+const COLLECTION_NAME = "member"; // コレクション名
 
 // Firestore に格納されるデータの型定義
 type Data = {
-  title: string;
+  name: string;
+  id: string;
+  email: string;
 };
 
-// Firestore 上のタイトルデータを更新する
-function updateData(newTitle: string) {
-  const dataDoc = doc(database, COLLECTION_NAME, UNIQUE_DATA_ID);
-  const data: Data = {
-    title: newTitle,
-  };
-  setDoc(dataDoc, data);
-}
-
 function App() {
-  const [title, setTitle] = useState("Firebase、マジ神");
-  const [userTitle, setUserTitle] = useState("");
-
-  // ドキュメントリスナーの生成
+  const [userList, setUserList] = useState<Data[]>([]);
+  // ユーザー入力のステートを作成
+  const [userInput, setUserInput] = useState<Data>({
+    name: "",
+    id: "",
+    email: "",
+  });
   useEffect(() => {
-    const dataDoc = doc(database, COLLECTION_NAME, UNIQUE_DATA_ID);
-    const unsubscribe = onSnapshot(dataDoc, (snapshot) => {
-      if (snapshot.exists()) {
-        const data = snapshot.data() as Data;
-        setTitle(data.title);
-      }
-      return () => unsubscribe();
+    // Firestoreからデータをリアルタイムに取得する
+    const usersCollection = collection(database, COLLECTION_NAME);
+    const q = query(usersCollection, orderBy("name")); // 名前でソート
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const users: Data[] = [];
+      querySnapshot.forEach((doc) => {
+        users.push(doc.data() as Data);
+      });
+      setUserList(users);
     });
+
+    // コンポーネントがアンマウントされたときにリッスンを停止する
+    return unsubscribe;
   }, []);
 
-  // ユーザー入力のハンドリング
-  function handleOnChangeUserTitle(newTitle: string) {
-    setUserTitle(newTitle);
+  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setUserInput({
+      ...userInput,
+      [event.target.name]: event.target.value,
+    });
   }
 
-  // タイトルの変更
-  function handleOnSendTitle() {
-    updateData(userTitle);
-    setUserTitle("");
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    await addData(userInput);
+  }
+
+  // Firestore 上のユーザーデータを追加する
+  async function addData(newUser: Data) {
+    const userDoc = doc(database, COLLECTION_NAME, newUser.id);
+    await setDoc(userDoc, newUser);
   }
 
   return (
     <>
-      <div>
-        タイトル争奪戦
-        <h1>{title}</h1>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 10,
-          }}
-        >
+      <form onSubmit={handleSubmit}>
+        <label>
+          名前:
           <input
             type="text"
-            id="new-title"
-            name="new-title"
-            value={userTitle}
-            onChange={(e) => handleOnChangeUserTitle(e.target.value)}
+            name="name"
+            value={userInput.name}
+            onChange={handleInputChange}
           />
+        </label>
+        <label>
+          ID:
           <input
-            type="button"
-            id="change-title"
-            name="change-title"
-            value="書き換える"
-            minLength={50}
-            onClick={() => handleOnSendTitle()}
+            type="text"
+            name="id"
+            value={userInput.id}
+            onChange={handleInputChange}
           />
-        </div>
+        </label>
+        <label>
+          メール:
+          <input
+            type="email"
+            name="email"
+            value={userInput.email}
+            onChange={handleInputChange}
+          />
+        </label>
+        <input type="submit" value="登録" />
+      </form>
+      <div>
+        <h2>登録ユーザー:</h2>
+        <ul>
+          {userList.map((user, index) => (
+            <li key={index}>
+              名前: {user.name}, ID: {user.id}, メール: {user.email}
+            </li>
+          ))}
+        </ul>
+        {/* ... */}
       </div>
     </>
   );
