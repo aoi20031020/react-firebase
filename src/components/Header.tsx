@@ -28,6 +28,7 @@ const Header = (props: Props) => {
         fontSize={{ base: "3xl", lg: "6xl" }}
         py={{ base: 2, lg: 0 }}
         fontWeight={600}
+        textAlign="center"
       >
         GDSCchuo-Membership
       </Text>
