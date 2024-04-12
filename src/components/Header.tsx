@@ -1,21 +1,36 @@
-import { Box, Flex, Heading } from "@chakra-ui/react";
+import { HamburgerIcon } from "@chakra-ui/icons";
+import { Button, Flex, Text } from "@chakra-ui/react";
 
-const Header = () => {
+type Props = {
+  onOpen: () => void;
+};
+
+const Header = (props: Props) => {
   return (
     <Flex
-      as="header"
-      position="fixed"
-      zIndex={10}
-      bg="teal.200"
-      width="full"
-      height="100px"
-      textAlign="right"
-      py={1}
-      px={6}
+      bg="teal.400"
+      w="100%"
+      zIndex="docked"
+      color="white"
+      height={20}
+      align="center"
     >
-      <Box bg="teal.400" w="100%" p={4} color="white">
-        <Heading>GDSCchuo-Membership</Heading>
-      </Box>
+      <Button
+        variant="ghost"
+        fontSize={"2xl"}
+        boxSize={12}
+        onClick={() => props.onOpen()}
+        margin={2}
+      >
+        <HamburgerIcon />
+      </Button>
+      <Text
+        fontSize={{ base: "3xl", lg: "6xl" }}
+        py={{ base: 2, lg: 0 }}
+        fontWeight={600}
+      >
+        GDSCchuo-Membership
+      </Text>
     </Flex>
   );
 };
