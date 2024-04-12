@@ -1,10 +1,17 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 
 const Footer = () => {
   return (
-    <Box bg="teal.500" w="100%" color="white" position="fixed" bottom="0">
-      <Text textAlign="center">&copy; {new Date().getFullYear()} GDSCchuo</Text>
-    </Box>
+    <Flex
+      bg="teal.400"
+      w="100%"
+      zIndex="docked"
+      color="white"
+      height={10}
+      bottom="0"
+    >
+      <Text>&copy; {new Date().getFullYear()} GDSCchuo</Text>
+    </Flex>
   );
 };
 
