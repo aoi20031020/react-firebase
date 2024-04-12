@@ -1,85 +1,31 @@
-import { useState, useEffect } from "react";
-import "./App.css";
-import { doc, setDoc, onSnapshot } from "firebase/firestore";
-import { database } from "./firebaseApp";
+import { appRouter } from "./pages/AppRouter";
+import Entry from "./pages/Entry";
+import Member from "./pages/Member";
+import MyProfile from "./pages/MyProfile";
 
-const COLLECTION_NAME = "title"; // コレクション名
-const UNIQUE_DATA_ID = "unique"; // ドキュメントID
+// ページ情報を定義して appRouter に設定
+const pages = [
+  { key: "Entry", path: "/", element: <Entry /> },
+  { key: "Member", path: "/Member", element: <Member /> },
+  {
+    key: "MyProfile",
+    path: "/MyProfile",
+    element: <MyProfile />,
+  },
+];
+const router = appRouter(pages);
 
-// Firestore に格納されるデータの型定義
-type Data = {
-  title: string;
-};
-
-// Firestore 上のタイトルデータを更新する
-function updateData(newTitle: string) {
-  const dataDoc = doc(database, COLLECTION_NAME, UNIQUE_DATA_ID);
-  const data: Data = {
-    title: newTitle,
-  };
-  setDoc(dataDoc, data);
-}
-
-function App() {
-  const [title, setTitle] = useState("Firebase、マジ神");
-  const [userTitle, setUserTitle] = useState("");
-
-  // ドキュメントリスナーの生成
-  useEffect(() => {
-    const dataDoc = doc(database, COLLECTION_NAME, UNIQUE_DATA_ID);
-    const unsubscribe = onSnapshot(dataDoc, (snapshot) => {
-      if (snapshot.exists()) {
-        const data = snapshot.data() as Data;
-        setTitle(data.title);
-      }
-      return () => unsubscribe();
-    });
-  }, []);
-
-  // ユーザー入力のハンドリング
-  function handleOnChangeUserTitle(newTitle: string) {
-    setUserTitle(newTitle);
-  }
-
-  // タイトルの変更
-  function handleOnSendTitle() {
-    updateData(userTitle);
-    setUserTitle("");
-  }
-
+const App = () => {
   return (
     <>
-      <div>
-        タイトル争奪戦
-        <h1>{title}</h1>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 10,
-          }}
-        >
-          <input
-            type="text"
-            id="new-title"
-            name="new-title"
-            value={userTitle}
-            onChange={(e) => handleOnChangeUserTitle(e.target.value)}
-          />
-          <input
-            type="button"
-            id="change-title"
-            name="change-title"
-            value="書き換える"
-            minLength={50}
-            onClick={() => handleOnSendTitle()}
-          />
-        </div>
-      </div>
+      <h1>Hello World</h1>
+      <p>App.jsx</p>
+      {/* appRouter の navbarLink に書き換え*/}
+      {router.navbarLink}
+      {/* appRouter の browserRouter に書き換え*/}
+      {router.browserRouter}
     </>
   );
-}
+};
 
 export default App;
