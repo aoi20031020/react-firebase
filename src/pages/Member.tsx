@@ -39,7 +39,7 @@ function Member() {
         <ul>
           {userList.map((user, index) => (
             <li key={index}>
-              名前: {user.name}, ID: {user.id}, メール: {user.email}
+              名前: {user.name}, 学籍番号: {user.id}, メール: {user.email}
             </li>
           ))}
         </ul>

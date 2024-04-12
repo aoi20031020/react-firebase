@@ -22,6 +22,7 @@ const MyProfile = () => {
   return (
     <>
       <p>MyProfile</p>
+      <label>学籍番号:</label>
       <input type="text" value={id} onChange={(e) => setId(e.target.value)} />
       <button onClick={fetchRecord}>表示</button>
       {record && <pre>{JSON.stringify(record, null, 2)}</pre>}
