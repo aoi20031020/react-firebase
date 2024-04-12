@@ -1,7 +1,7 @@
 import { AppRouter } from "./components/AppRouter";
 import { Box, Flex, useDisclosure } from "@chakra-ui/react";
 import Header from "./components/Header";
-import Footer from "./components/Footer";
+// import Footer from "./components/Footer";
 import DrawerMenu from "./components/DrawerMenu";
 
 const App = () => {
@@ -17,9 +17,9 @@ const App = () => {
           <AppRouter />
         </Box>
       </Flex>
-      <Box>
+      {/* <Box>
         <Footer />
-      </Box>
+      </Box> */}
     </Flex>
   );
 };
