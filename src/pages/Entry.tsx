@@ -5,7 +5,7 @@ function Entry() {
   return (
     <>
       <div>
-        <h2>ユーザー登録</h2>
+        <h1>ユーザー登録</h1>
         <UserForm />
       </div>
     </>

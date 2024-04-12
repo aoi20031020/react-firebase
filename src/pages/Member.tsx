@@ -5,7 +5,7 @@ function Member() {
   return (
     <>
       <div>
-        <h2>登録ユーザー:</h2>
+        <h1>登録ユーザー</h1>
         <UserTable />
       </div>
     </>

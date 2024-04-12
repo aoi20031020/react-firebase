@@ -22,7 +22,7 @@ const MyProfile = () => {
 
   return (
     <>
-      <p>MyProfile</p>
+      <h1>MyProfile</h1>
       <Flex align="center">
         <label>学籍番号</label>
         <Input
