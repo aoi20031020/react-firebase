@@ -1,30 +1,31 @@
-import { appRouter } from "./pages/AppRouter";
-import Entry from "./pages/Entry";
-import Member from "./pages/Member";
-import MyProfile from "./pages/MyProfile";
-
-// ページ情報を定義して appRouter に設定
-const pages = [
-  { key: "Entry", path: "/", element: <Entry /> },
-  { key: "Member", path: "/Member", element: <Member /> },
-  {
-    key: "MyProfile",
-    path: "/MyProfile",
-    element: <MyProfile />,
-  },
-];
-const router = appRouter(pages);
-
+import { AppRouter } from "./components/AppRouter";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import { Box, Flex } from "@chakra-ui/react";
+import { SideMenu } from "./components/SideMenu";
 const App = () => {
   return (
-    <>
-      <h1>Hello World</h1>
-      <p>App.jsx</p>
-      {/* appRouter の navbarLink に書き換え*/}
-      {router.navbarLink}
-      {/* appRouter の browserRouter に書き換え*/}
-      {router.browserRouter}
-    </>
+    <Flex direction="column" minHeight="100vh">
+      <Box flexGrow={1}>
+        <Header />
+      </Box>
+      <Box
+        w="100vw"
+        h={{ base: "calc(100vh - 80px)", lg: "calc(100vh - 100px)" }}
+      >
+        <SideMenu width="20vw" />
+        <Box
+          w={{ base: "100vw", lg: "80vw" }}
+          ml={{ base: "0vw", lg: "19vw" }}
+          p={{ base: "3", lg: "4" }}
+        >
+          <AppRouter />
+        </Box>
+      </Box>
+      <Box flexGrow={1}>
+        <Footer />
+      </Box>
+    </Flex>
   );
 };
 
